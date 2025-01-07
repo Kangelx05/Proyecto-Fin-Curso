@@ -1,5 +1,9 @@
 package api.mappers;
 
+import api.domain.User;
+import api.dto.UserRequest;
+import api.dto.UserResponse;
+
 public abstract class UserMapper {
 
     public static void updateUserFromRequest(User user, UserRequest request) {
@@ -20,7 +24,6 @@ public abstract class UserMapper {
                 user.getName(),
                 user.getSurnames(),
                 user.getUsername(),
-                user.getPassword(),
                 user.getEmail(),
                 user.getPhone()
         );

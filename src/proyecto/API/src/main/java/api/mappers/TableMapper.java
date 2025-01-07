@@ -1,13 +1,15 @@
 package api.mappers;
 
 import api.domain.Table;
+import api.dto.TableRequest;
+import api.dto.TableResponse;
 
 public abstract class TableMapper {
 
     public static void updateTableFromRequest(Table table, TableRequest tableRequest) {
 
         table.setNumTable(tableRequest.getNumTable());
-        table.setWaiter_id(tableRequest.getWaiter_id());
+        UserMapper.updateUserFromRequest(table.getWaiter(), tableRequest.getWaiter());
         table.setState(tableRequest.getState());
         table.setNumCustomers(tableRequest.getNumCustomers());
 
@@ -19,7 +21,7 @@ public abstract class TableMapper {
                 table.getId(),
                 table.getNumTable(),
                 table.getNumCustomers(),
-                table.getWaiter_id(),
+                UserMapper.toResponse(table.getWaiter()),
                 table.getState()
         );
 

@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "order_details")
+@jakarta.persistence.Table(name = "order_details")
 public class OrderDetail {
     @Id
     @Column(name = "id", nullable = false)
