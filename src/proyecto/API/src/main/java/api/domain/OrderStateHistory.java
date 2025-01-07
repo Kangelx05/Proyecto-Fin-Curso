@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import java.time.Instant;
 
 @Entity
-@Table(name = "order_state_history")
+@jakarta.persistence.Table(name = "order_state_history")
 public class OrderStateHistory {
     @Id
     @Column(name = "id", nullable = false)

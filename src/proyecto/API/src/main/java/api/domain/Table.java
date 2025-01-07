@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = "`table`")
+@jakarta.persistence.Table(name = "`table`")
 public class Table {
     @Id
     @Column(name = "id", nullable = false)

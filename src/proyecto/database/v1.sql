@@ -116,7 +116,7 @@ CREATE TABLE `order_state_history` (
   KEY `order_id_idx` (`order_id`),
   KEY `user_id_history_idx` (`user_id`),
   CONSTRAINT `order_id_history` FOREIGN KEY (`order_id`) REFERENCES `order` (`id`),
-  CONSTRAINT `user_id_history` FOREIGN KEY (`user_id`) REFERENCES `usuarios` (`id`)
+  CONSTRAINT `user_id_history` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -140,7 +140,7 @@ DROP TABLE IF EXISTS `products`;
 CREATE TABLE `products` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
-  `price` decimal(10,2) NOT NULL,
+  `price` int NOT NULL,
   `category` varchar(45) DEFAULT NULL,
   `desc` text,
   PRIMARY KEY (`id`)
@@ -166,12 +166,12 @@ DROP TABLE IF EXISTS `table`;
 CREATE TABLE `table` (
   `id` int NOT NULL AUTO_INCREMENT,
   `numTable` int NOT NULL,
-  `numCustommers` int NOT NULL,
-  `waiterId` int NOT NULL,
+  `numCustomers` int NOT NULL,
+  `waiter_Id` int NOT NULL,
   `state` varchar(45) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `waiter_id_idx` (`waiterId`),
-  CONSTRAINT `waiter_id` FOREIGN KEY (`waiterId`) REFERENCES `usuarios` (`id`)
+  KEY `waiter_id_idx` (`waiter_Id`),
+  CONSTRAINT `waiter_id` FOREIGN KEY (`waiter_Id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -186,32 +186,33 @@ INSERT INTO `table` VALUES (2,5,4,1,'test');
 UNLOCK TABLES;
 
 --
--- Table structure for table `usuarios`
+-- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `usuarios`;
+DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `usuarios` (
+CREATE TABLE `users` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
   `surnames` varchar(45) NOT NULL,
-  `user` varchar(45) NOT NULL,
+  `username` varchar(45) NOT NULL,
   `password` varchar(45) NOT NULL,
   `email` varchar(45) DEFAULT NULL,
-  `phone` varchar(45) NOT NULL,
-  PRIMARY KEY (`id`)
+  `phone` varchar(9) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username_UNIQUE` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `usuarios`
+-- Dumping data for table `users`
 --
 
-LOCK TABLES `usuarios` WRITE;
-/*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (1,'admin','admin','admin','admin',NULL,'646008514');
-/*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,'admin','admin','admin','admin',NULL,'646008514');
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -227,4 +228,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-01-06 16:36:47
+-- Dump completed on 2025-01-07 15:14:14

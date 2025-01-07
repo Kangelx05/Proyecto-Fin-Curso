@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
-@Table(name = "inventory")
+@jakarta.persistence.Table(name = "inventory")
 public class Inventory {
     @Id
     @Column(name = "id", nullable = false)
