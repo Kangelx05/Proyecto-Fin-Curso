@@ -8,9 +8,9 @@ public abstract class OrderMapper {
 
     public static void updateOrderFromRequest(Order order, OrderRequest orderRequest) {
 
-        TableMapper.updateTableFromRequest(order.getTable(), orderRequest.getTable());
-        order.setDate(orderRequest.getDate());
-        order.setState(orderRequest.getState());
+        TableMapper.updateTableFromRequest(order.getTable(), orderRequest.table());
+        order.setDate(orderRequest.date());
+        order.setState(orderRequest.state());
 
     }
 

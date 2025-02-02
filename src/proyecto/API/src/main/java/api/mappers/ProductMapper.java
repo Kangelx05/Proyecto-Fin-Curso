@@ -8,10 +8,10 @@ public abstract class ProductMapper {
 
     public static void updateProductFromRequest(Product product, ProductRequest productRequest) {
 
-        product.setName(productRequest.getName());
-        product.setPrice(productRequest.getPrice());
-        product.setCategory(productRequest.getCategory());
-        product.setDesc(productRequest.getDesc());
+        product.setName(productRequest.name());
+        product.setPrice(productRequest.price());
+        product.setCategory(productRequest.category());
+        product.setDesc(productRequest.desc());
 
     }
 

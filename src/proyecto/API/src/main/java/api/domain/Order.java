@@ -10,7 +10,7 @@ import java.time.Instant;
 @jakarta.persistence.Table(name = "order")
 public class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private Integer id;
 
