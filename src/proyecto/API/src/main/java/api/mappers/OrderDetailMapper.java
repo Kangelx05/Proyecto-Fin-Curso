@@ -8,9 +8,9 @@ public abstract class OrderDetailMapper {
 
     public static void updateOrderDetailFromRequest(OrderDetail orderDetail, OrderDetailRequest orderDetailRequest) {
 
-        OrderMapper.updateOrderFromRequest(orderDetail.getOrder(), orderDetailRequest.getOrder());
-        orderDetail.setAmount(orderDetailRequest.getAmount());
-        ProductMapper.updateProductFromRequest(orderDetail.getProduct(), orderDetailRequest.getProduct());
+        OrderMapper.updateOrderFromRequest(orderDetail.getOrder(), orderDetailRequest.order());
+        orderDetail.setAmount(orderDetailRequest.amount());
+        ProductMapper.updateProductFromRequest(orderDetail.getProduct(), orderDetailRequest.product());
 
     }
 

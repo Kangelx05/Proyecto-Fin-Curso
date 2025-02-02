@@ -1,7 +1,13 @@
 package api.repository;
 
 import api.domain.Table;
-import org.springframework.data.repository.ListCrudRepository;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TableRepository extends ListCrudRepository<Table, Integer> {
+public interface TableRepository extends JpaRepository<Table, Integer> {
+    Table findTableById(Integer id);
+
+
+    boolean existsByNumTable(@NotNull @PositiveOrZero Integer integer);
 }

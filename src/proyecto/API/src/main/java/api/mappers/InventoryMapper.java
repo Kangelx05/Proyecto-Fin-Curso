@@ -1,15 +1,14 @@
 package api.mappers;
 
 import api.domain.Inventory;
-import api.domain.Table;
 import api.dto.*;
 
 public abstract class InventoryMapper {
 
     public static void updateInventoryFromRequest(Inventory inventory, InventoryRequest inventoryRequest) {
 
-        inventory.setAmount(inventoryRequest.getAmount());
-        ProductMapper.updateProductFromRequest(inventory.getProduct(), inventoryRequest.getProduct());
+        inventory.setAmount(inventoryRequest.amount());
+        ProductMapper.updateProductFromRequest(inventory.getProduct(), inventoryRequest.product());
 
     }
 

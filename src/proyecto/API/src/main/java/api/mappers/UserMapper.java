@@ -8,12 +8,12 @@ public abstract class UserMapper {
 
     public static void updateUserFromRequest(User user, UserRequest request) {
 
-        user.setName(request.getName());
-        user.setSurnames(request.getSurnames());
-        user.setUsername(request.getUsername());
-        user.setPassword(request.getPassword());
-        user.setEmail(request.getEmail());
-        user.setPhone(request.getPhone());
+        user.setName(request.name());
+        user.setSurnames(request.surnames());
+        user.setUsername(request.username());
+        user.setPassword(request.password());
+        user.setEmail(request.email());
+        user.setPhone(request.phone());
 
     }
 

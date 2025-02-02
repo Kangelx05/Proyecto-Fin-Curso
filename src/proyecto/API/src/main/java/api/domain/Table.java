@@ -41,16 +41,16 @@ public class Table {
         return numTable;
     }
 
-    public void setNumTable(Integer numTable) {
-        this.numTable = numTable;
+    public void setNumTable(Integer num_Table) {
+        this.numTable = num_Table;
     }
 
     public Integer getNumCustomers() {
         return numCustomers;
     }
 
-    public void setNumCustomers(Integer numCustomers) {
-        this.numCustomers = numCustomers;
+    public void setNumCustomers(Integer num_Customers) {
+        this.numCustomers = num_Customers;
     }
 
     public User getWaiter() {

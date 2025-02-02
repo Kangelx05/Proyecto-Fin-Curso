@@ -9,11 +9,11 @@ public abstract class OrderStateHistoryMapper {
 
         public static void updateOrderStateHistoryFromRequest(OrderStateHistory orderStateHistory, OrderStateHistoryRequest orderStateHistoryRequest) {
 
-            orderStateHistory.setNewState(orderStateHistoryRequest.getNewState());
-            orderStateHistory.setOldState(orderStateHistoryRequest.getOldState());
-            OrderMapper.updateOrderFromRequest(orderStateHistory.getOrder(), orderStateHistoryRequest.getOrder());
-            orderStateHistory.setDate(orderStateHistoryRequest.getDate());
-            UserMapper.updateUserFromRequest(orderStateHistory.getUser(), orderStateHistoryRequest.getUser());
+            orderStateHistory.setNewState(orderStateHistoryRequest.newState());
+            orderStateHistory.setOldState(orderStateHistoryRequest.oldState());
+            OrderMapper.updateOrderFromRequest(orderStateHistory.getOrder(), orderStateHistoryRequest.order());
+            orderStateHistory.setDate(orderStateHistoryRequest.date());
+            UserMapper.updateUserFromRequest(orderStateHistory.getUser(), orderStateHistoryRequest.user());
 
         }
 

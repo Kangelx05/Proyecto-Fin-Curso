@@ -8,10 +8,10 @@ public abstract class TableMapper {
 
     public static void updateTableFromRequest(Table table, TableRequest tableRequest) {
 
-        table.setNumTable(tableRequest.getNumTable());
-        UserMapper.updateUserFromRequest(table.getWaiter(), tableRequest.getWaiter());
-        table.setState(tableRequest.getState());
-        table.setNumCustomers(tableRequest.getNumCustomers());
+        table.setNumTable(tableRequest.num_Table());
+        UserMapper.updateUserFromRequest(table.getWaiter(), tableRequest.waiter());
+        table.setState(tableRequest.state());
+        table.setNumCustomers(tableRequest.num_Customers());
 
     }
 

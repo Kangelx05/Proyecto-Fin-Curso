@@ -1,8 +1,6 @@
 package api.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -12,7 +10,8 @@ import jakarta.validation.constraints.Size;
 @Table(name = "users")
 public class User {
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Size(max = 45)
@@ -46,7 +45,7 @@ public class User {
     @Size(max = 45)
     @NotNull
     @NotBlank
-    @Column(name = "phone", nullable = false, length = 45)
+    @Column(name = "phone", nullable = false, length = 45, unique = true)
     private String phone;
 
     public Integer getId() {
