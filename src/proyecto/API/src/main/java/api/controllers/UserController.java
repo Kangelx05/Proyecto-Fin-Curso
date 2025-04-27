@@ -3,51 +3,68 @@ package api.controllers;
 import api.dto.UserRequest;
 import api.dto.UserResponse;
 import api.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/users") // Ruta base para todos los endpoints
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
 
-    // Inyección por constructor
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    // 1) Obtener usuario por ID
+    @Operation(
+            operationId = "getUserById",
+            summary     = "Get user by ID",
+            description = "Retrieve a user record by its unique identifier."
+    )
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable int id) throws Exception {
-        // Llamamos al servicio
         UserResponse user = userService.findById(id);
-        return ResponseEntity.ok(user); // 200 OK
+        return ResponseEntity.ok(user);
     }
 
-    // 2) Crear usuario nuevo
+    @Operation(
+            operationId = "createUser",
+            summary     = "Create a new user",
+            description = "Create a new user with the provided details."
+    )
     @PostMapping
-    public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserRequest requestedUser) throws Exception{
-        // Llamamos al servicio
+    public ResponseEntity<UserResponse> createUser(
+            @Valid @RequestBody UserRequest requestedUser
+    ) throws Exception {
         UserResponse createdUser = userService.createUser(requestedUser);
-        // Retornamos 201 Created + el objeto creado
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
-    // 3) Actualizar usuario
+    @Operation(
+            operationId = "updateUser",
+            summary     = "Update user by ID",
+            description = "Update the user record identified by its ID with new data."
+    )
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponse> updateUser(@Valid @RequestBody UserRequest requestedUser, @PathVariable int id) throws Exception {
+    public ResponseEntity<UserResponse> updateUser(
+            @Valid @RequestBody UserRequest requestedUser,
+            @PathVariable int id
+    ) throws Exception {
         UserResponse updatedUser = userService.updateUser(requestedUser, id);
-        return ResponseEntity.ok(updatedUser); // 200 OK
+        return ResponseEntity.ok(updatedUser);
     }
 
-    // 4) Eliminar usuario
+    @Operation(
+            operationId = "deleteUser",
+            summary     = "Delete user by ID",
+            description = "Remove the user record identified by its ID."
+    )
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable int id) throws Exception {
         userService.deleteUser(id);
-        // Retornamos 204 No Content, ya que no hay cuerpo que devolver
         return ResponseEntity.noContent().build();
     }
 }
