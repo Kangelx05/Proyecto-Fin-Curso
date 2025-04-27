@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="Domain.Entities.InventoryItem">
+    <Position X="11" Y="6.25" Width="2.25" />
+    <AssociationLine Name="Amount" Type="Domain.ValueObjects.Quantity" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="11" Y="7.062" />
+        <Point X="10.625" Y="7.062" />
+        <Point X="10.625" Y="6.688" />
+        <Point X="8.75" Y="6.688" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\InventoryItem.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Product" />
+      <Property Name="Amount" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Domain.Entities.OrderHistoryEntry">
+    <Position X="1.25" Y="2.75" Width="2" />
+    <AssociationLine Name="New_State" Type="Domain.Enumerations.OrderStatus" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="2.25" Y="2.75" />
+        <Point X="2.25" Y="1.125" />
+        <Point X="3.75" Y="1.125" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAEDAAAAAAAAAAAAAAAAAEAAAAAAAAABAAEAAAAAAAA=</HashCode>
+      <FileName>Entities\OrderHistoryEntry.cs</FileName>
+      <NewMemberFileName>Entities\Order.cs</NewMemberFileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="New_State" />
+      <Property Name="Old_State" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Domain.Entities.OrderDetails">
+    <Position X="15.5" Y="3.25" Width="1.5" />
+    <AssociationLine Name="Amount" Type="Domain.ValueObjects.Quantity" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="15.5" Y="4.375" />
+        <Point X="8" Y="4.375" />
+        <Point X="8" Y="5" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\OrderDetails.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Product" />
+      <Property Name="Amount" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Domain.Entities.Product">
+    <Position X="17" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAQAgAAAAAAAAAAQAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>Entities\Product.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Price" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Domain.Entities.Table">
+    <Position X="4.25" Y="9" Width="1.5" />
+    <AssociationLine Name="NumTable" Type="Domain.ValueObjects.Quantity" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.75" Y="9.778" />
+        <Point X="6.125" Y="9.778" />
+        <Point X="6.125" Y="6.438" />
+        <Point X="7.25" Y="6.438" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="NumCustomers" Type="Domain.ValueObjects.Quantity" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.75" Y="9.75" />
+        <Point X="6.125" Y="9.75" />
+        <Point X="6.125" Y="6.812" />
+        <Point X="7.25" Y="6.812" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAgAAAACAAAAAABAAAAAA=</HashCode>
+      <FileName>Entities\Table.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Waiter" />
+      <Property Name="NumTable" />
+      <Property Name="NumCustomers" />
+      <Property Name="State" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Domain.Entities.User">
+    <Position X="0.75" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAACAAAAACAAAAAAQAAAAAAAACAQAAIAAAAAA=</HashCode>
+      <FileName>Entities\User.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Domain.Entities.Order">
+    <Position X="4" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAACAAAAABAAQAAAAAAAAAABAAAABAAAAAA=</HashCode>
+      <FileName>Entities\Order.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="OrderStatus" />
+    </ShowAsAssociation>
+  </Class>
+  <Struct Name="Domain.ValueObjects.Money">
+    <Position X="16.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAACACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ValueObjects\Money.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Domain.ValueObjects.Quantity">
+    <Position X="7.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>ValueObjects\Quantity.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="Domain.Enumerations.TableStatus" Collapsed="true">
+    <Position X="4.5" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAkAgAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Enumerations\TableStatus.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Domain.Enumerations.OrderStatus" Collapsed="true">
+    <Position X="3.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAgIgDAAAA=</HashCode>
+      <FileName>Enumerations\OrderStatus.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
