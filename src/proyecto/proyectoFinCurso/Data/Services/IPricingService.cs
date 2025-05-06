@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Enumerations;
 using Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,10 @@ namespace Domain.Services
 {
     public interface IPricingService
     {
-        Money calculateTotal(Order order);
-
+        PaymentType paymentType { get; set; }
+        Money CalculateTotal(Table table);
+        Money CalculateSubtotal(Table table);
+        Money CalculateTaxes(Table table);
+        Money ApplyDiscounts(Table table);
     }
 }

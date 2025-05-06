@@ -1,0 +1,42 @@
+@startuml Pedido
+start
+:mostrarCarta();
+:crearPedido();
+:validarStock();
+if (**stock OK?**) then (sí)
+  :enviarACocina();
+else (no)
+  :avisarFaltaStock();
+endif
+stop
+@enduml
+
+@startuml Reabastecimiento
+start
+:monitorizarNivelStock();
+if (**stockBajo()**) then (sí)
+  :generarOrdenCompra();
+  :registrarTesoreria();
+  :actualizarInventario();
+  :notificarRecepcion();
+endif
+stop
+@enduml
+
+@startuml Estadisticas
+start
+:recolectarDatos();
+:calcularIndicadores();
+:generarGraficos();
+:publicarDashboard();
+stop
+@enduml
+
+
+@startuml ServirPedido
+start
+if (**pedido OK?**)
+:actualizarEstado;
+endif
+stop
+@enduml

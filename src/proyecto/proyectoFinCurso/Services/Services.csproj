@@ -105,9 +105,13 @@
   <ItemGroup>
     <Compile Include="ApplicationServices\InventoryAppService.cs" />
     <Compile Include="ApplicationServices\OrderAppService.cs" />
+    <Compile Include="ApplicationServices\PricingService.cs" />
+    <Compile Include="ApplicationServices\StockPolicyService.cs" />
     <Compile Include="ApplicationServices\TableAppService.cs" />
     <Compile Include="ApplicationServices\UsersService.cs" />
     <Compile Include="ApiClients\api-docs.cs" />
+    <Compile Include="Mapping\AutoMapperConfig.cs" />
+    <Compile Include="Mapping\DtoToDomainProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -116,9 +120,7 @@
       <Name>Domain</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Mapping\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="app.config" />
     <None Include="ApiClients\api-docs.json">
