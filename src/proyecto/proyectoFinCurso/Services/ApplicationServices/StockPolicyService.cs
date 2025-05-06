@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Presentation.UI
+namespace Services.ApplicationServices
 {
-    public class tEST
+    internal class StockPolicyService
     {
     }
 }

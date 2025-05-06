@@ -1,4 +1,6 @@
 ﻿
+using Domain.Entities;
+using Services.Mapping;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +15,18 @@ namespace Services.ApplicationServices
         private ApiClient apiClient;
         public UsersService() {
 
-            TableRequest test = new TableRequest();
+
+            
            
 
+        }
+
+        public async Task<User> getUser()
+        {
+            var dto = await apiClient.GetUserByIdAsync(1);
+
+            User user = AutoMapperConfig.Mapper.Map<User>(dto);
+            return user;
         }
 
     }

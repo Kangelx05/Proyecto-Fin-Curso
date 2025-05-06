@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using AutoMapper;
+using Presentation.UI;
+using Services.Mapping;
 
 namespace Presentation
 {
@@ -16,10 +18,11 @@ namespace Presentation
         [STAThread]
         static void Main()
         {
-            var builder = WebApplication.CreateBuilder(args);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+
+            AutoMapperConfig.RegisterMappings();
+            Application.Run(new Home());
         }
     }
 }

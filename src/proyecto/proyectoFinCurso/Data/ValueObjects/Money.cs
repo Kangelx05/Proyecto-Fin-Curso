@@ -20,9 +20,16 @@ namespace Domain.ValueObjects
 
         public Money Add(Money other)
         {
+            if (other.Currency == Currency)
+            {
+                return new Money(Amount + other.Amount, Currency);
+            }
+            else
+            {
+                throw new ArgumentException("Cannot add different money types");
+            }
 
         }
-
 
     }
 }
