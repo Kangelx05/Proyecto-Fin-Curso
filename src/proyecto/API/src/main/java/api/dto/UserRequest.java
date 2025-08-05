@@ -14,6 +14,6 @@ import java.io.Serializable;
 public record UserRequest(@NotNull @Size(max = 45) @NotBlank String name,
                           @NotNull @Size(max = 45) @NotBlank String surnames,
                           @NotNull @Size(max = 45) @NotBlank String username,
-                          @NotNull @Size(max = 45) @NotBlank String password, @Size(max = 45) @Email String email,
+                          @Size(max = 45) @Email String email,
                           @NotNull @Size(max = 45) String phone) implements Serializable {
 }

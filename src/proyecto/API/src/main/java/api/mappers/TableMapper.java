@@ -9,9 +9,10 @@ public abstract class TableMapper {
     public static void updateTableFromRequest(Table table, TableRequest tableRequest) {
 
         table.setNumTable(tableRequest.num_Table());
-        UserMapper.updateUserFromRequest(table.getWaiter(), tableRequest.waiter());
         table.setState(tableRequest.state());
         table.setNumCustomers(tableRequest.num_Customers());
+        table.setPosX(tableRequest.posX());
+        table.setPosY(tableRequest.posY());
 
     }
 
@@ -22,7 +23,9 @@ public abstract class TableMapper {
                 table.getNumTable(),
                 table.getNumCustomers(),
                 UserMapper.toResponse(table.getWaiter()),
-                table.getState()
+                table.getState(),
+                table.getPosX(),
+                table.getPosY()
         );
 
     }

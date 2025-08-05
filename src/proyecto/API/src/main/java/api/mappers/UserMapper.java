@@ -11,7 +11,6 @@ public abstract class UserMapper {
         user.setName(request.name());
         user.setSurnames(request.surnames());
         user.setUsername(request.username());
-        user.setPassword(request.password());
         user.setEmail(request.email());
         user.setPhone(request.phone());
 

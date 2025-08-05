@@ -9,5 +9,5 @@ import java.io.Serializable;
  */
 public record TableResponse(Integer id, @NotNull @PositiveOrZero Integer num_Table,
                             @NotNull @Positive Integer num_Customers, @NotNull UserResponse waiter,
-                            @NotNull @Size(max = 45) @NotBlank String state) implements Serializable {
+                            @NotNull @Size(max = 45) @NotBlank String state, Integer posX, Integer posY) implements Serializable {
 }
