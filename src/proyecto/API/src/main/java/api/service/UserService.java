@@ -8,6 +8,9 @@ import api.repository.UserRepository;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -25,15 +28,33 @@ public class UserService {
         return UserMapper.toResponse(user);
     }
 
+    public List<UserResponse> findAll() throws Exception {
+        List<User> users = userRepository.findAll();
+        List<UserResponse> userResponses = new ArrayList<>();
+        for (User user : users) {
+            userResponses.add(UserMapper.toResponse(user));
+        }
+        return userResponses;
+    }
 
-    public UserResponse createUser(@NotNull UserRequest requestedUser) throws Exception {
-        if (userRepository.existsByUsername(requestedUser.username())) {
-            throw new Exception("Usuario ya existente: " + requestedUser.username());
+    public boolean changePassword(int id, String password, String previousPassword) throws Exception {
+        User user = userRepository.findUserById(id);
+        if (user.getPassword().equals(previousPassword)) {
+            user.setPassword(password);
+            userRepository.save(user);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
+    public UserResponse createUser(@NotNull User requestedUser) throws Exception {
+        if (userRepository.existsByUsername(requestedUser.getUsername())) {
+            throw new Exception("Usuario ya existente: " + requestedUser.getUsername());
         }
 
-        User user = new User();
-        UserMapper.updateUserFromRequest(user, requestedUser);
-        User savedUser = userRepository.save(user);
+        User savedUser = userRepository.save(requestedUser);
 
         return UserMapper.toResponse(savedUser);
     }

@@ -5,18 +5,19 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 @Entity
-@jakarta.persistence.Table(name = "`table`")
+@jakarta.persistence.Table(name = "service_tables")
 public class Table {
     @Id
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id" )
     private Integer id;
 
     @NotNull
-    @Column(name = "numTable", nullable = false)
+    @Column(name = "num_Table", nullable = false)
     private Integer numTable;
 
     @NotNull
-    @Column(name = "numCustomers", nullable = false)
+    @Column(name = "num_Customers", nullable = false)
     private Integer numCustomers;
 
     @NotNull
@@ -28,6 +29,16 @@ public class Table {
     @NotNull
     @Column(name = "state", nullable = false, length = 45)
     private String state;
+
+    @Column(name = "posx")
+    private Integer posX;
+
+    @Column(name = "posy")
+    private Integer posY;
+
+    public Table() {
+        waiter = new User();
+    }
 
     public Integer getId() {
         return id;
@@ -68,5 +79,12 @@ public class Table {
     public void setState(String state) {
         this.state = state;
     }
+
+    public Integer getPosX() { return posX;}
+
+    public void setPosX(Integer posX) {this.posX = posX;}
+
+    public Integer getPosY() { return posY;}
+    public void setPosY(Integer posY) {this.posY = posY;}
 
 }

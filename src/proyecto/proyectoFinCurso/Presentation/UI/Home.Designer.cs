@@ -29,18 +29,20 @@
         private void InitializeComponent()
         {
             this.panelSideMenu = new System.Windows.Forms.Panel();
+            this.edit = new System.Windows.Forms.Button();
+            this.add = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.Menu = new System.Windows.Forms.Button();
             this.canvasPanel = new System.Windows.Forms.Panel();
-            this.add = new System.Windows.Forms.Button();
-            this.edit = new System.Windows.Forms.Button();
+            this.api = new System.Windows.Forms.Button();
             this.panelSideMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelSideMenu
             // 
             this.panelSideMenu.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.panelSideMenu.Controls.Add(this.api);
             this.panelSideMenu.Controls.Add(this.edit);
             this.panelSideMenu.Controls.Add(this.add);
             this.panelSideMenu.Controls.Add(this.button1);
@@ -50,6 +52,26 @@
             this.panelSideMenu.Name = "panelSideMenu";
             this.panelSideMenu.Size = new System.Drawing.Size(277, 884);
             this.panelSideMenu.TabIndex = 0;
+            // 
+            // edit
+            // 
+            this.edit.Dock = System.Windows.Forms.DockStyle.Top;
+            this.edit.Location = new System.Drawing.Point(0, 196);
+            this.edit.Name = "edit";
+            this.edit.Size = new System.Drawing.Size(277, 48);
+            this.edit.TabIndex = 5;
+            this.edit.Text = "edit";
+            this.edit.UseVisualStyleBackColor = true;
+            // 
+            // add
+            // 
+            this.add.Dock = System.Windows.Forms.DockStyle.Top;
+            this.add.Location = new System.Drawing.Point(0, 148);
+            this.add.Name = "add";
+            this.add.Size = new System.Drawing.Size(277, 48);
+            this.add.TabIndex = 4;
+            this.add.Text = "add";
+            this.add.UseVisualStyleBackColor = true;
             // 
             // button1
             // 
@@ -87,25 +109,16 @@
             this.canvasPanel.Size = new System.Drawing.Size(1276, 884);
             this.canvasPanel.TabIndex = 2;
             // 
-            // add
+            // api
             // 
-            this.add.Dock = System.Windows.Forms.DockStyle.Top;
-            this.add.Location = new System.Drawing.Point(0, 148);
-            this.add.Name = "add";
-            this.add.Size = new System.Drawing.Size(277, 48);
-            this.add.TabIndex = 4;
-            this.add.Text = "add";
-            this.add.UseVisualStyleBackColor = true;
-            // 
-            // edit
-            // 
-            this.edit.Dock = System.Windows.Forms.DockStyle.Top;
-            this.edit.Location = new System.Drawing.Point(0, 196);
-            this.edit.Name = "edit";
-            this.edit.Size = new System.Drawing.Size(277, 48);
-            this.edit.TabIndex = 5;
-            this.edit.Text = "edit";
-            this.edit.UseVisualStyleBackColor = true;
+            this.api.Dock = System.Windows.Forms.DockStyle.Top;
+            this.api.Location = new System.Drawing.Point(0, 244);
+            this.api.Name = "api";
+            this.api.Size = new System.Drawing.Size(277, 48);
+            this.api.TabIndex = 6;
+            this.api.Text = "apiButton";
+            this.api.UseVisualStyleBackColor = true;
+            this.api.Click += new System.EventHandler(this.FrmMesas_Load);
             // 
             // Home
             // 
@@ -132,5 +145,6 @@
         private System.Windows.Forms.Panel canvasPanel;
         private System.Windows.Forms.Button edit;
         private System.Windows.Forms.Button add;
+        private System.Windows.Forms.Button api;
     }
 }

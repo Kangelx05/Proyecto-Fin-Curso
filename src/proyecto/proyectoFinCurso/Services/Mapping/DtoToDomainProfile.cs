@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Entities;
+using Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,11 @@ namespace Services.Mapping
     {
         public DtoToDomainProfile()
         {
+            CreateMap<int, Quantity>()
+            .ConvertUsing(src => new Quantity(src, 0));
+
+            CreateMap<Quantity, int>()
+            .ConvertUsing(q => q.Value);
             // Product
             CreateMap<ProductResponse, Product>();
             CreateMap<Product, ProductRequest>();

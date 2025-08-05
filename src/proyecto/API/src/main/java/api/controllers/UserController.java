@@ -1,13 +1,17 @@
 package api.controllers;
 
+import api.domain.User;
 import api.dto.UserRequest;
 import api.dto.UserResponse;
 import api.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -31,13 +35,35 @@ public class UserController {
     }
 
     @Operation(
+            operationId = "findAll",
+            summary     = "Get all users",
+            description = "Gets all the users stored in the database."
+    )
+    @GetMapping("")
+    public ResponseEntity<List<UserResponse>> findAll() throws Exception {
+        List<UserResponse> user = userService.findAll();
+        return ResponseEntity.ok(user);
+    }
+
+    @Operation(
+            operationId = "changePassword",
+            summary     = "Change the password of a user",
+            description = "Changes the password of a user."
+    )
+    @PutMapping("/password/{id}")
+    public boolean changePassword(@PathVariable int id, @RequestBody String password, @RequestBody String previousPassword) throws Exception {
+
+        return userService.changePassword(id, password, previousPassword);
+    }
+
+    @Operation(
             operationId = "createUser",
             summary     = "Create a new user",
             description = "Create a new user with the provided details."
     )
     @PostMapping
     public ResponseEntity<UserResponse> createUser(
-            @Valid @RequestBody UserRequest requestedUser
+            @Valid @RequestBody User requestedUser
     ) throws Exception {
         UserResponse createdUser = userService.createUser(requestedUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);

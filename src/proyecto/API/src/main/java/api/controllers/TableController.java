@@ -9,6 +9,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/table")
 public class TableController {
@@ -26,6 +28,16 @@ public class TableController {
     @GetMapping("/{id}")
     public ResponseEntity<TableResponse> getById(@PathVariable int id) throws Exception {
         return ResponseEntity.ok(tableService.findById(id));
+    }
+
+    @Operation(
+            operationId = "getAllTables",
+            summary     = "Get all existent tables",
+            description = "Gets all the tables stored in the database"
+    )
+    @GetMapping("")
+    public ResponseEntity<List<TableResponse>> findAll() throws Exception {
+        return ResponseEntity.ok(tableService.getAllTables());
     }
 
     @Operation(

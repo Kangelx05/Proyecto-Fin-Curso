@@ -109,9 +109,9 @@
     <Compile Include="ApplicationServices\StockPolicyService.cs" />
     <Compile Include="ApplicationServices\TableAppService.cs" />
     <Compile Include="ApplicationServices\UsersService.cs" />
-    <Compile Include="ApiClients\api-docs.cs" />
     <Compile Include="Mapping\AutoMapperConfig.cs" />
     <Compile Include="Mapping\DtoToDomainProfile.cs" />
+    <Compile Include="OpenAPIs\api-docs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -123,7 +123,7 @@
   <ItemGroup />
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="ApiClients\api-docs.json">
+    <None Include="OpenAPIs\api-docs.json">
       <ClassName>ApiClient</ClassName>
       <CodeGenerator>NSwagCSharp</CodeGenerator>
       <SourceUri>http://localhost:8080/v3/api-docs</SourceUri>
