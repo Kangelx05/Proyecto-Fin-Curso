@@ -40,10 +40,10 @@ public class User {
     @Column(name = "email", length = 45)
     private String email;
 
-    @Size(max = 45)
+    @Size(max = 9)
     @NotNull
     @NotBlank
-    @Column(name = "phone", nullable = false, length = 45, unique = true)
+    @Column(name = "phone", nullable = false, length = 9, unique = true)
     private String phone;
 
     public Integer getId() {

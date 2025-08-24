@@ -1,9 +1,7 @@
 package api.service;
 
 import api.domain.OrderStateHistory;
-import api.dto.OrderStateHistoryRequest;
-import api.dto.OrderStateHistoryResponse;
-import api.mappers.OrderStateHistoryMapper;
+// DTOs and mappers are used in controllers, not the service layer
 import api.repository.OrderStateHistoryRepository;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
@@ -17,23 +15,36 @@ public class OrderStateHistoryService {
         this.orderStateHistoryRepository = orderStateHistoryRepository;
     }
 
-    public OrderStateHistoryResponse findById(int id) throws Exception {
-        OrderStateHistory orderStateHistory = orderStateHistoryRepository.findById(id).orElseThrow();
-        return OrderStateHistoryMapper.toResponse(orderStateHistory);
+    public OrderStateHistory findById(int id) throws Exception {
+        return orderStateHistoryRepository.findById(id).orElseThrow();
     }
 
-    public OrderStateHistoryResponse createOrderStateHistory(@NotNull OrderStateHistoryRequest requestedOrderStateHistory) {
-        OrderStateHistory orderStateHistory = new OrderStateHistory();
-        OrderStateHistoryMapper.updateOrderStateHistoryFromRequest(orderStateHistory, requestedOrderStateHistory);
-        OrderStateHistory savedOrderStateHistory = orderStateHistoryRepository.save(orderStateHistory);
-
-        return OrderStateHistoryMapper.toResponse(savedOrderStateHistory);
+    /**
+     * Persist a new order state history entry.
+     *
+     * @param orderStateHistory the entity to persist
+     * @return the saved {@link OrderStateHistory}
+     */
+    public OrderStateHistory createOrderStateHistory(@NotNull OrderStateHistory orderStateHistory) {
+        return orderStateHistoryRepository.save(orderStateHistory);
     }
 
-    public OrderStateHistoryResponse updateOrderStateHistory(@NotNull OrderStateHistoryRequest requestedOrderStateHistory, int id) throws Exception {
-        OrderStateHistory orderStateHistory = orderStateHistoryRepository.findById(id).orElseThrow();
-        OrderStateHistoryMapper.updateOrderStateHistoryFromRequest(orderStateHistory, requestedOrderStateHistory);
-        return OrderStateHistoryMapper.toResponse(orderStateHistoryRepository.save(orderStateHistory));
+    /**
+     * Update an existing order state history entry.
+     *
+     * @param updated contains the new values
+     * @param id      identifier of the record to update
+     * @return the updated {@link OrderStateHistory}
+     * @throws Exception if the record does not exist
+     */
+    public OrderStateHistory updateOrderStateHistory(@NotNull OrderStateHistory updated, int id) throws Exception {
+        OrderStateHistory existing = orderStateHistoryRepository.findById(id).orElseThrow();
+        existing.setOldState(updated.getOldState());
+        existing.setNewState(updated.getNewState());
+        existing.setDate(updated.getDate());
+        existing.setOrder(updated.getOrder());
+        existing.setUser(updated.getUser());
+        return orderStateHistoryRepository.save(existing);
     }
 
     public void deleteOrderStateHistory(int id) throws Exception {

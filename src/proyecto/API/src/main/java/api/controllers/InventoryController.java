@@ -1,8 +1,10 @@
 package api.controllers;
 
 import api.dto.InventoryRequest;
+import api.domain.Inventory;
 import api.dto.InventoryResponse;
 import api.service.InventoryService;
+import api.mappers.InventoryMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +26,7 @@ public class InventoryController {
     )
     @GetMapping("/{id}")
     public ResponseEntity<InventoryResponse> getById(@PathVariable int id) throws Exception {
-        return ResponseEntity.ok(inventoryService.findById(id));
+        return ResponseEntity.ok(InventoryMapper.toResponse(inventoryService.findById(id)));
     }
 
     @Operation(
@@ -34,7 +36,10 @@ public class InventoryController {
     )
     @PostMapping
     public ResponseEntity<InventoryResponse> create(@RequestBody @Valid InventoryRequest request) throws Exception {
-        return ResponseEntity.ok(inventoryService.createInventory(request));
+        // map the DTO into a domain entity
+        Inventory inventory = InventoryMapper.getInventoryFromRequest(request);
+        Inventory saved = inventoryService.createInventory(inventory);
+        return ResponseEntity.ok(InventoryMapper.toResponse(saved));
     }
 
     @Operation(
@@ -47,7 +52,9 @@ public class InventoryController {
             @PathVariable int id,
             @RequestBody @Valid InventoryRequest request
     ) throws Exception {
-        return ResponseEntity.ok(inventoryService.updateInventory(request, id));
+        Inventory updated = InventoryMapper.getInventoryFromRequest(request);
+        Inventory saved = inventoryService.updateInventory(updated, id);
+        return ResponseEntity.ok(InventoryMapper.toResponse(saved));
     }
 
     @Operation(

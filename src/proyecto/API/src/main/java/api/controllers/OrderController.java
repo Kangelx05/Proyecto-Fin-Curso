@@ -3,6 +3,8 @@ package api.controllers;
 import api.dto.OrderRequest;
 import api.dto.OrderResponse;
 import api.service.OrderService;
+import api.mappers.OrderMapper;
+import api.domain.Order;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +26,7 @@ public class OrderController {
     )
     @GetMapping("/{id}")
     public ResponseEntity<OrderResponse> getById(@PathVariable int id) throws Exception {
-        return ResponseEntity.ok(orderService.findById(id));
+        return ResponseEntity.ok(OrderMapper.toResponse(orderService.findById(id)));
     }
 
     @Operation(
@@ -34,7 +36,10 @@ public class OrderController {
     )
     @PostMapping
     public ResponseEntity<OrderResponse> create(@RequestBody @Valid OrderRequest request) {
-        return ResponseEntity.ok(orderService.createOrder(request));
+        // map DTO to domain entity
+        Order order = OrderMapper.getOrderFromRequest(request);
+        Order saved = orderService.createOrder(order);
+        return ResponseEntity.ok(OrderMapper.toResponse(saved));
     }
 
     @Operation(
@@ -47,7 +52,9 @@ public class OrderController {
             @PathVariable int id,
             @RequestBody @Valid OrderRequest request
     ) throws Exception {
-        return ResponseEntity.ok(orderService.updateOrder(request, id));
+        Order updated = OrderMapper.getOrderFromRequest(request);
+        Order saved = orderService.updateOrder(updated, id);
+        return ResponseEntity.ok(OrderMapper.toResponse(saved));
     }
 
     @Operation(
@@ -59,5 +66,17 @@ public class OrderController {
     public ResponseEntity<Void> delete(@PathVariable int id) throws Exception {
         orderService.deleteOrder(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(
+            operationId  = "finishOrder",
+            summary      = "Finalize an order",
+            description  = "Mark the order as finished, set delivery timestamp and compute total amount.\n" +
+                           "Also frees the associated table by setting its state to FREE."
+    )
+    @PutMapping("/{id}/finish")
+    public ResponseEntity<OrderResponse> finish(@PathVariable int id) throws Exception {
+        api.domain.Order finished = orderService.finishOrder(id);
+        return ResponseEntity.ok(OrderMapper.toResponse(finished));
     }
 }
