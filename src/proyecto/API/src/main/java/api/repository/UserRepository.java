@@ -10,5 +10,13 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     User findUserById(int id);
 
+    /**
+     * Look up a user by their username.
+     *
+     * @param username the username to search for
+     * @return the matching {@link User} or null if none exists
+     */
+    User findByUsername(@Size(max = 45) @NotNull @NotBlank String username);
+
     boolean existsByUsername(@Size(max = 45) @NotNull @NotBlank String username);
 }

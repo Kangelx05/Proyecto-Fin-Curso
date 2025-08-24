@@ -1,22 +1,13 @@
 package api.service;
 
 import api.domain.CardProduct;
-import api.domain.Inventory;
-import api.domain.Product;
-import api.dto.CardProductRequest;
-import api.dto.CardProductResponse;
-import api.dto.InventoryRequest;
-import api.dto.InventoryResponse;
-import api.mappers.CardProductMapper;
-import api.mappers.InventoryMapper;
-import api.mappers.ProductMapper;
+// DTOs and mappers are intentionally not used in the service layer.  They
+// remain imported elsewhere for controller mapping only.
 import api.repository.CardProductRepository;
-import api.repository.InventoryRepository;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CardProductService {
@@ -28,42 +19,64 @@ public class CardProductService {
             this.cardProductRepository = cardProductRepository;
         }
 
-    public CardProductResponse findById(int id) throws Exception{
-            CardProduct cardProduct = cardProductRepository.findById(id).orElseThrow();
-
-        return CardProductMapper.toResponse(cardProduct);
+    /**
+     * Retrieve a card product by id.
+     *
+     * @param id the primary key
+     * @return the {@link CardProduct} entity
+     * @throws Exception if no record exists
+     */
+    public CardProduct findById(int id) throws Exception {
+        return cardProductRepository.findById(id).orElseThrow();
     }
 
-        public List<CardProductResponse> findAll() throws Exception{
-            List<CardProduct> cardProduct = cardProductRepository.findAll();
+    /**
+     * Retrieve all card products.
+     *
+     * @return a list of {@link CardProduct} entities
+     */
+    public List<CardProduct> findAll() {
+        return cardProductRepository.findAll();
+    }
 
-            return cardProduct.stream()
-                    .map(CardProductMapper::toResponse).toList();
-        }
+    /**
+     * Persist a new card product.
+     *
+     * @param cardProduct entity containing the data to persist
+     * @return the persisted {@link CardProduct}
+     */
+    public CardProduct createCardProduct(@NotNull CardProduct cardProduct) {
+        return cardProductRepository.save(cardProduct);
+    }
 
-        public CardProductResponse createCardProduct(@NotNull CardProductRequest cardProductRequest) throws Exception {
+    /**
+     * Update an existing card product with new values.
+     *
+     * @param updated contains the new values
+     * @param id      identifier of the record to update
+     * @return the updated {@link CardProduct}
+     * @throws Exception if the record does not exist
+     */
+    public CardProduct updateCardProduct(@NotNull CardProduct updated, int id) throws Exception {
+        CardProduct existing = cardProductRepository.findById(id).orElseThrow();
+        existing.setName(updated.getName());
+        existing.setData(updated.getData());
+        existing.setDescription(updated.getDescription());
+        existing.setPrice(updated.getPrice());
+        existing.setCategory(updated.getCategory());
+        return cardProductRepository.save(existing);
+    }
 
-            CardProduct cardProduct = new CardProduct();
-            CardProductMapper.updateInventoryFromRequest(cardProduct, cardProductRequest);
-
-            CardProduct savedCardProduct =cardProductRepository.save(cardProduct);
-
-            return CardProductMapper.toResponse(savedCardProduct);
-        }
-
-        public CardProductResponse updateCardProduct(@NotNull CardProductRequest cardProductRequest, int id) throws Exception {
-
-            CardProduct cardProduct = cardProductRepository.findById(id).orElseThrow();
-
-            CardProductMapper.updateInventoryFromRequest(cardProduct, cardProductRequest);
-            return CardProductMapper.toResponse(cardProductRepository.save(cardProduct));
-
-        }
-
-        public void deleteCardProduct(int id) throws Exception {
-            CardProduct cardProduct = cardProductRepository.findById(id).orElseThrow();
-            cardProductRepository.delete(cardProduct);
-        }
+    /**
+     * Remove a card product by id.
+     *
+     * @param id the primary key
+     * @throws Exception if the record does not exist
+     */
+    public void deleteCardProduct(int id) throws Exception {
+        CardProduct cardProduct = cardProductRepository.findById(id).orElseThrow();
+        cardProductRepository.delete(cardProduct);
+    }
 
 
 }

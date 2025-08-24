@@ -1,11 +1,10 @@
 package api.controllers;
 
+import api.domain.CardProduct;
 import api.dto.CardProductRequest;
 import api.dto.CardProductResponse;
-import api.dto.InventoryRequest;
-import api.dto.InventoryResponse;
+import api.mappers.CardProductMapper;
 import api.service.CardProductService;
-import api.service.InventoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +30,7 @@ import java.util.List;
     )
     @GetMapping("/{id}")
     public ResponseEntity<CardProductResponse> findById(@PathVariable int id) throws Exception {
-        return ResponseEntity.ok(cardProductService.findById(id));
+        return ResponseEntity.ok(CardProductMapper.toResponse(cardProductService.findById(id)));
     }
 
         @Operation(
@@ -41,7 +40,11 @@ import java.util.List;
         )
         @GetMapping
         public ResponseEntity<List<CardProductResponse>> findAll() throws Exception {
-            return ResponseEntity.ok(cardProductService.findAll());
+            return ResponseEntity.ok(
+                    cardProductService.findAll().stream()
+                            .map(CardProductMapper::toResponse)
+                            .toList()
+            );
         }
 
         @Operation(
@@ -51,7 +54,10 @@ import java.util.List;
         )
         @PostMapping
         public ResponseEntity<CardProductResponse> create(@RequestBody @Valid CardProductRequest request) throws Exception {
-            return ResponseEntity.ok(cardProductService.createCardProduct(request));
+            // map the DTO into a domain entity
+            CardProduct cardProduct = CardProductMapper.getInventoryFromRequest(request);
+            CardProduct saved = cardProductService.createCardProduct(cardProduct);
+            return ResponseEntity.ok(CardProductMapper.toResponse(saved));
         }
 
         @Operation(
@@ -64,7 +70,10 @@ import java.util.List;
                 @PathVariable int id,
                 @RequestBody @Valid CardProductRequest request
         ) throws Exception {
-            return ResponseEntity.ok(cardProductService.updateCardProduct(request, id));
+            // map DTO into domain
+            CardProduct updated = CardProductMapper.getInventoryFromRequest(request);
+            CardProduct saved = cardProductService.updateCardProduct(updated, id);
+            return ResponseEntity.ok(CardProductMapper.toResponse(saved));
         }
 
         @Operation(

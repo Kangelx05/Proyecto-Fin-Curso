@@ -3,6 +3,8 @@ package api.controllers;
 import api.dto.OrderStateHistoryRequest;
 import api.dto.OrderStateHistoryResponse;
 import api.service.OrderStateHistoryService;
+import api.domain.OrderStateHistory;
+import api.mappers.OrderStateHistoryMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +26,7 @@ public class OrderStateHistoryController {
     )
     @GetMapping("/{id}")
     public ResponseEntity<OrderStateHistoryResponse> getById(@PathVariable int id) throws Exception {
-        return ResponseEntity.ok(orderStateHistoryService.findById(id));
+        return ResponseEntity.ok(OrderStateHistoryMapper.toResponse(orderStateHistoryService.findById(id)));
     }
 
     @Operation(
@@ -34,7 +36,10 @@ public class OrderStateHistoryController {
     )
     @PostMapping
     public ResponseEntity<OrderStateHistoryResponse> create(@RequestBody @Valid OrderStateHistoryRequest request) {
-        return ResponseEntity.ok(orderStateHistoryService.createOrderStateHistory(request));
+        // map DTO to domain entity
+        OrderStateHistory history = OrderStateHistoryMapper.getOrderStateHistoryFromRequest(request);
+        OrderStateHistory saved = orderStateHistoryService.createOrderStateHistory(history);
+        return ResponseEntity.ok(OrderStateHistoryMapper.toResponse(saved));
     }
 
     @Operation(
@@ -47,7 +52,9 @@ public class OrderStateHistoryController {
             @PathVariable int id,
             @RequestBody @Valid OrderStateHistoryRequest request
     ) throws Exception {
-        return ResponseEntity.ok(orderStateHistoryService.updateOrderStateHistory(request, id));
+        OrderStateHistory updated = OrderStateHistoryMapper.getOrderStateHistoryFromRequest(request);
+        OrderStateHistory saved = orderStateHistoryService.updateOrderStateHistory(updated, id);
+        return ResponseEntity.ok(OrderStateHistoryMapper.toResponse(saved));
     }
 
     @Operation(

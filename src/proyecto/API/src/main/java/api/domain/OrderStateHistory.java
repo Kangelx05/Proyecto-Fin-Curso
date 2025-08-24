@@ -10,6 +10,7 @@ import java.time.Instant;
 @jakarta.persistence.Table(name = "order_state_history")
 public class OrderStateHistory {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 

@@ -3,10 +3,10 @@ package api.controllers;
 import api.domain.User;
 import api.dto.UserRequest;
 import api.dto.UserResponse;
+import api.mappers.UserMapper;
 import api.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +30,8 @@ public class UserController {
     )
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable int id) throws Exception {
-        UserResponse user = userService.findById(id);
-        return ResponseEntity.ok(user);
+        User user = userService.findById(id);
+        return ResponseEntity.ok(UserMapper.toResponse(user));
     }
 
     @Operation(
@@ -41,8 +41,9 @@ public class UserController {
     )
     @GetMapping("")
     public ResponseEntity<List<UserResponse>> findAll() throws Exception {
-        List<UserResponse> user = userService.findAll();
-        return ResponseEntity.ok(user);
+        List<User> users = userService.findAll();
+        List<UserResponse> responses = users.stream().map(UserMapper::toResponse).toList();
+        return ResponseEntity.ok(responses);
     }
 
     @Operation(
@@ -63,10 +64,12 @@ public class UserController {
     )
     @PostMapping
     public ResponseEntity<UserResponse> createUser(
-            @Valid @RequestBody User requestedUser
+            @Valid @RequestBody UserRequest requestedUser
     ) throws Exception {
-        UserResponse createdUser = userService.createUser(requestedUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+        // map the request into a domain entity
+        User user = UserMapper.getUserFromRequest(requestedUser);
+        User createdUser = userService.createUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toResponse(createdUser));
     }
 
     @Operation(
@@ -79,8 +82,9 @@ public class UserController {
             @Valid @RequestBody UserRequest requestedUser,
             @PathVariable int id
     ) throws Exception {
-        UserResponse updatedUser = userService.updateUser(requestedUser, id);
-        return ResponseEntity.ok(updatedUser);
+        User user = UserMapper.getUserFromRequest(requestedUser);
+        User updatedUser = userService.updateUser(user, id);
+        return ResponseEntity.ok(UserMapper.toResponse(updatedUser));
     }
 
     @Operation(

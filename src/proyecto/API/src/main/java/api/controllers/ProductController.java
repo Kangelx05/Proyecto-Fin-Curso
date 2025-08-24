@@ -1,7 +1,9 @@
 package api.controllers;
 
+import api.domain.Product;
 import api.dto.ProductRequest;
 import api.dto.ProductResponse;
+import api.mappers.ProductMapper;
 import api.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -24,7 +26,8 @@ public class ProductController {
     )
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getById(@PathVariable int id) throws Exception {
-        return ResponseEntity.ok(productService.findById(id));
+        Product product = productService.findById(id);
+        return ResponseEntity.ok(ProductMapper.toResponse(product));
     }
 
     @Operation(
@@ -34,7 +37,10 @@ public class ProductController {
     )
     @PostMapping
     public ResponseEntity<ProductResponse> create(@RequestBody @Valid ProductRequest request) throws Exception {
-        return ResponseEntity.ok(productService.createProduct(request));
+        // map incoming DTO into a domain entity
+        Product product = ProductMapper.getProductFromRequest(request);
+        Product created = productService.createProduct(product);
+        return ResponseEntity.ok(ProductMapper.toResponse(created));
     }
 
     @Operation(
@@ -47,7 +53,10 @@ public class ProductController {
             @PathVariable int id,
             @RequestBody @Valid ProductRequest request
     ) throws Exception {
-        return ResponseEntity.ok(productService.updateProduct(request, id));
+        // map incoming DTO to a domain entity
+        Product updated = ProductMapper.getProductFromRequest(request);
+        Product result = productService.updateProduct(updated, id);
+        return ResponseEntity.ok(ProductMapper.toResponse(result));
     }
 
     @Operation(

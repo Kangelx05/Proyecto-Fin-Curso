@@ -1,11 +1,7 @@
 package api.service;
 
 import api.domain.Inventory;
-import api.domain.Product;
-import api.dto.InventoryRequest;
-import api.dto.InventoryResponse;
-import api.mappers.InventoryMapper;
-import api.mappers.ProductMapper;
+// InventoryMapper is not used directly in this service layer; mapping is handled in controllers
 import api.repository.InventoryRepository;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
@@ -19,31 +15,34 @@ public class InventoryService {
         this.inventoryRepository = inventoryRepository;
     }
 
-    public InventoryResponse findById(int id) throws Exception {
-        Inventory inventory = inventoryRepository.findById(id).orElseThrow();
-        return InventoryMapper.toResponse(inventory);
+    public Inventory findById(int id) throws Exception {
+        return inventoryRepository.findById(id).orElseThrow();
     }
 
-    public InventoryResponse createInventory(@NotNull InventoryRequest inventoryRequest) throws Exception {
-        Product product = new Product();
-        ProductMapper.updateProductFromRequest(product, inventoryRequest.product());
-        inventoryRepository.findByProduct(product).orElseThrow();
-
-        Inventory inventory = new Inventory();
-        InventoryMapper.updateInventoryFromRequest(inventory, inventoryRequest);
-        Inventory savedInventory = inventoryRepository.save(inventory);
-
-        return InventoryMapper.toResponse(savedInventory);
+    /**
+     * Persist a new inventory record.
+     *
+     * @param inventory the domain entity to save
+     * @return the saved {@link Inventory}
+     */
+    public Inventory createInventory(@NotNull Inventory inventory) {
+        return inventoryRepository.save(inventory);
     }
 
-
-    public InventoryResponse updateInventory(@NotNull InventoryRequest inventoryRequest, int id) throws Exception {
-        Inventory inventory = inventoryRepository.findById(id).orElseThrow();
-
-        InventoryMapper.updateInventoryFromRequest(inventory,inventoryRequest);
-        return InventoryMapper.toResponse(inventoryRepository.save(inventory));
+    /**
+     * Update an existing inventory record with new values.
+     *
+     * @param updated the entity containing new values (product and amount)
+     * @param id      identifier of the record to update
+     * @return the updated {@link Inventory}
+     * @throws Exception if the record does not exist
+     */
+    public Inventory updateInventory(@NotNull Inventory updated, int id) throws Exception {
+        Inventory existing = inventoryRepository.findById(id).orElseThrow();
+        existing.setAmount(updated.getAmount());
+        existing.setProduct(updated.getProduct());
+        return inventoryRepository.save(existing);
     }
-
 
     public void deleteInventory(int id) throws Exception {
         Inventory inventory = inventoryRepository.findById(id).orElseThrow();
