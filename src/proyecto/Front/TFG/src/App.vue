@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
+import HeaderContent from '@/components/HeaderContent.vue'
+import BarOrdersDrawer from '@/components/BarOrdersDrawer.vue'
 import { RouterLink, RouterView, useRoute } from 'vue-router'
 
 const navOpen = ref(false)
@@ -60,7 +62,12 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
 </script>
 
 <template>
-  <div class="app-shell" :class="{ 'nav-open': navOpen }">
+  <!-- Mostrar solo el contenido cuando la ruta es /login -->
+  <div v-if="route.path === '/login'" class="login-container">
+    <RouterView />
+  </div>
+  <!-- Si no, mostrar la aplicación completa con navegación -->
+  <div v-else class="app-shell" :class="{ 'nav-open': navOpen }">
     <!-- Topbar -->
     <header class="topbar">
       <button class="icon-btn" aria-label="Abrir menú" :aria-expanded="navOpen" @click="toggleNav">
@@ -71,6 +78,9 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
         <span class="logo">🍽</span>
         <span>Restaurante</span>
       </div>
+
+      <!-- Dynamic header content: legend/buttons or add product, depending on the current view -->
+      <HeaderContent />
     </header>
 
     <!-- Sidenav -->
@@ -85,7 +95,9 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
 
       <nav class="menu">
         <RouterLink to="/application" class="menu-item">Plano de mesas</RouterLink>
-        <RouterLink to="/card" class="menu-item">Vista tarjetas</RouterLink>
+        <RouterLink to="/card" class="menu-item">Carta</RouterLink>
+        <RouterLink to="/kitchen" class="menu-item">Cocina</RouterLink>
+        <RouterLink to="/serve" class="menu-item">Platos por servir</RouterLink>
       </nav>
 
       <div class="sidenav-footer">
@@ -100,6 +112,9 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
     <main class="content">
       <RouterView />
     </main>
+
+    <!-- Drawer for bar orders appears at the bottom when there are pending drinks -->
+    <BarOrdersDrawer />
   </div>
 </template>
 
@@ -286,8 +301,13 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
     margin-left: 0;
     padding: 0;
   }
+  /*
+    Cuando el menú lateral está abierto en escritorio (>=1024px), no queremos que el
+    contenido se desplace hacia la derecha.  Por tanto, establecemos el margen a 0
+    para que el menú se superponga sobre el contenido en lugar de empujarlo.
+  */
   .app-shell.nav-open .content {
-    margin-left: var(--nav-width);
+    margin-left: 0;
   }
   .icon-btn.close {
     display: inline-grid;

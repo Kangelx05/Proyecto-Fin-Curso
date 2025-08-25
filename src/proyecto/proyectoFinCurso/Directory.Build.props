@@ -1,6 +1,0 @@
-<Project>
-  <PropertyGroup>
-    <!-- se aplicará a TODOS los proyectos que no lo sobreescriban -->
-    <LangVersion>9.0</LangVersion>
-  </PropertyGroup>
-</Project>

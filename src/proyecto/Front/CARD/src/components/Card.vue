@@ -13,6 +13,16 @@
 
       <ul v-if="categoriasAbiertas[categoria]" class="lista-productos grid-cards">
         <li v-for="producto in productos" :key="producto.id" class="card">
+          <!-- Imagen del producto o un marcador de posición.  La altura del contenedor de la imagen es fija
+               para que todas las tarjetas tengan la misma altura. -->
+          <div class="card-image-container">
+            <img
+              :src="getImageSrc(producto)"
+              class="card-image"
+              alt="Imagen del producto"
+              @error="onImgError"
+            />
+          </div>
           <div class="card-body">
             <h3 class="card-title">{{ producto.name }}</h3>
             <p class="card-desc">{{ producto.description }}</p>
@@ -78,7 +88,14 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref, onMounted, watch } from 'vue'
-import axios from 'axios'
+// Use the shared API service which attaches session tokens and
+// automatically handles token renewal on 401 responses.
+import api from '../services/api'
+
+// Import a placeholder image used when a product has no data image.  The bundler will
+// resolve this import to a URL that can be used as an <img> src.  We copy the
+// placeholder file into the assets directory so it can be bundled.
+import placeholder from '../assets/placeholder.png'
 
 interface Producto {
   id: number
@@ -138,7 +155,8 @@ function addToCart(p: Producto) {
   const found = cart.value.find((i) => i.id === p.id)
   if (found) found.qty++
   else cart.value.push({ ...p, qty: 1 })
-  isCartOpen.value = true
+  // Do not automatically open the cart when adding an item.
+  // Keep the drawer closed so users can continue browsing products.
   persistCart()
 }
 
@@ -157,10 +175,125 @@ function decreaseQty(item: CartItem) {
   else persistCart()
 }
 
+function getImageSrc(p: Producto): string {
+  const d = (p as any)?.data
+  if (!d) return placeholder
+
+  // 1) Si ya viene como string base64 (con o sin prefijo data:)
+  if (typeof d === 'string') {
+    if (d.startsWith('data:image')) return d // ya formateada
+    // si es base64 pura, prefija con el tipo (asumimos jpeg por defecto)
+    return `data:image/jpeg;base64,${d}`
+  }
+
+  // 2) Si viene como objeto tipo Buffer { type: 'Buffer', data: [...] }
+  if (d && typeof d === 'object' && Array.isArray(d.data)) {
+    const u8 = new Uint8Array(d.data)
+    const type = detectMime(u8) ?? 'image/jpeg'
+    return `data:${type};base64,${u8ToBase64(u8)}`
+  }
+
+  // 3) Si viene como array de números o ya es un Uint8Array
+  if (Array.isArray(d) || d instanceof Uint8Array) {
+    const u8 = d instanceof Uint8Array ? d : new Uint8Array(d)
+    const type = detectMime(u8) ?? 'image/jpeg'
+    return `data:${type};base64,${u8ToBase64(u8)}`
+  }
+
+  return placeholder
+}
+
+// Convierte Uint8Array -> base64 en trozos (evita petadas de stack/memoria)
+function u8ToBase64(u8: Uint8Array): string {
+  let binary = ''
+  const chunk = 0x8000
+  for (let i = 0; i < u8.length; i += chunk) {
+    binary += String.fromCharCode.apply(null, u8.subarray(i, i + chunk) as any)
+  }
+  return btoa(binary)
+}
+
+// Detección simple de MIME por cabecera
+function detectMime(u8: Uint8Array): string | null {
+  // JPEG
+  if (u8[0] === 0xff && u8[1] === 0xd8 && u8[2] === 0xff) return 'image/jpeg'
+  // PNG
+  if (u8[0] === 0x89 && u8[1] === 0x50 && u8[2] === 0x4e && u8[3] === 0x47) return 'image/png'
+  // WEBP: "RIFF....WEBP"
+  if (
+    u8[0] === 0x52 &&
+    u8[1] === 0x49 &&
+    u8[2] === 0x46 &&
+    u8[3] === 0x46 &&
+    u8[8] === 0x57 &&
+    u8[9] === 0x45 &&
+    u8[10] === 0x42 &&
+    u8[11] === 0x50
+  )
+    return 'image/webp'
+  return null
+}
+
+function onImgError(ev: Event) {
+  ;(ev.target as HTMLImageElement).src = placeholder
+}
+
 function checkout() {
-  // Aquí harías POST a tu backend con el carrito
-  // axios.post('/pedido', { items: cart.value })
-  alert('Pedido enviado (demo).')
+  // Perform the checkout by creating an order and its details via the API.
+  ;(async () => {
+    try {
+      const token = localStorage.getItem('sessionToken')
+      if (!token) {
+        alert('No se ha encontrado una sesión activa. Escanea el QR de la mesa primero.')
+        return
+      }
+      // Decode the JWT payload to extract the table identifier.  The payload is the second
+      // part of the JWT (header.payload.signature) and is Base64URL-encoded.  The
+      // `atob` function decodes Base64 strings but does not handle URL-safe characters,
+      // so replace URL-safe characters before decoding.
+      const base64 = token.split('.')[1]
+      const json = atob(base64.replace(/-/g, '+').replace(/_/g, '/'))
+      const payload = JSON.parse(json)
+      const tableId = payload.tableId
+      if (!tableId) {
+        alert('La sesión no contiene información de la mesa.')
+        return
+      }
+      // Create the order.  The backend will link the order to the existing table via
+      // the provided tableId.  Use the current timestamp and an initial state.
+      const orderRes = await api.post('/order', {
+        tableId: tableId,
+        date: new Date().toISOString(),
+        // Always create or resume an open order.  The backend will reuse an
+        // existing order with the same tableId and state "IN_SERVICE" if one
+        // already exists.
+        state: 'IN_SERVICE',
+      })
+      const orderId = orderRes.data.id
+      // Para cada artículo del carrito, crea tantas líneas de pedido como unidades
+      // se hayan solicitado.  Cada llamada a la API representa una única unidad
+      // de producto (OrderDetail) y no incluye un campo de cantidad.  Esto
+      // permite que la cocina muestre un único contador por producto.
+      for (const item of cart.value) {
+        for (let i = 0; i < item.qty; i++) {
+          await api.post('/order-detail', {
+            orderId: orderId,
+            productName: item.name,
+            unitPrice: item.price,
+            productId: item.id,
+          })
+        }
+      }
+      // Clear the cart and persist the empty state
+      cart.value = []
+      persistCart()
+      isCartOpen.value = false
+      alert('¡Pedido enviado correctamente!')
+    } catch (err) {
+      console.error('Error al enviar el pedido:', err)
+      alert('Hubo un error al enviar el pedido. Inténtalo de nuevo.')
+    }
+  })()
 }
 
 /* Persistencia simple en localStorage */
@@ -178,7 +311,7 @@ onMounted(() => {
 /* Carga de productos */
 onMounted(async () => {
   try {
-    const response = await axios.get<Producto[]>('http://localhost:8081/cardProduct')
+    const response = await api.get<Producto[]>('/cardProduct')
     productos.value = response.data
   } catch (error) {
     console.error('Error al cargar productos:', error)
@@ -255,16 +388,33 @@ onMounted(async () => {
   position: relative;
   display: flex;
   flex-direction: column;
+  height: 100%;
   gap: 0.75rem;
   border: 1px solid #374151;
   border-radius: 0.75rem;
   background: linear-gradient(180deg, #1f2937 0%, #111827 100%);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
-  padding: 1rem;
+  padding: 0;
+  overflow: hidden;
   transition:
     transform 0.14s ease,
     box-shadow 0.14s ease,
     border-color 0.14s ease;
+}
+
+/* Contenedor de la imagen en la tarjeta.  Se fija la altura para que todas las
+   imágenes tengan la misma proporción y las tarjetas sean uniformes. */
+.card-image-container {
+  width: 100%;
+  height: 150px;
+  overflow: hidden;
+  border-bottom: 1px solid #374151;
+}
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 .card:hover {
   transform: translateY(-2px);
@@ -288,6 +438,20 @@ onMounted(async () => {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+.card-body {
+  /* Add horizontal padding so the product title and description are not flush
+     against the card edges.  The padding on the sides improves readability
+     without affecting the image above. */
+  padding-left: 0.85rem;
+  padding-right: 0.85rem;
+}
+
+/* Add horizontal padding to the footer to space the price and add button
+   away from the card edges. */
+.card-footer {
+  padding-left: 0.85rem;
+  padding-right: 0.85rem;
 }
 .card-footer {
   display: flex;
