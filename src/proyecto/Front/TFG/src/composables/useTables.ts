@@ -1,11 +1,11 @@
 import { ref } from 'vue'
-import axios from 'axios'
+import api from '@/services/api'
 
 const iconos = ref<any[]>([])
 
 const reloadContent = async () => {
   try {
-    const response = await axios.get('http://localhost:8081/table')
+    const response = await api.get('/table')
     iconos.value = response.data.map((table: any) => ({
       id: table.id,
       x: table.posX,
